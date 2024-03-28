@@ -16,7 +16,7 @@ class LedgerItemView(viewsets.ModelViewSet):
     queryset = LedgerItem.objects.all()
 
 @api_view(('GET',))
-def get_ledger_items(self):
-    queryset = self.queryset.values('id', 'date', 'category__name', 
+def ledger_view(self):
+    queryset = LedgerItem.objects.all().values('id', 'date', 'category__name', 
         'category__type', 'amount')
     return(Response(queryset))
