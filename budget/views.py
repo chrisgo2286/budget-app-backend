@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .serializers import (CategorySerializer, LedgerItemSerializer, 
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
@@ -12,3 +14,9 @@ class CategoryView(viewsets.ModelViewSet):
 class LedgerItemView(viewsets.ModelViewSet):
     serializer_class = LedgerItemSerializer
     queryset = LedgerItem.objects.all()
+
+@api_view(('GET',))
+def get_ledger_items(self):
+    queryset = self.queryset.values('id', 'date', 'category__name', 
+        'category__type', 'amount')
+    return(Response(queryset))
