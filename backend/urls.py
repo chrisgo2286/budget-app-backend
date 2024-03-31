@@ -17,14 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from budget.views import CategoryView, LedgerItemView, ledger_view
+from budget.views import (CategoryView, BudgetItemView, LedgerItemView, 
+    ledger_view, budget_view)
 
 router = routers.DefaultRouter()
 router.register(r'categories', CategoryView, 'category')
 router.register(r'ledger_items', LedgerItemView, 'ledger_item')
+router.register(r'budget_items', BudgetItemView, 'budget_item')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/ledger/', ledger_view),
+    path('api/budget/', budget_view),
 ]
