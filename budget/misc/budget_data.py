@@ -12,6 +12,7 @@ class BudgetData:
         for budget_item in self.budget_items:
             id = budget_item.id
             category = budget_item.category.name
+            category_type = budget_item.category.type
             budget_amount = budget_item.amount
             actual_amount = self.calc_actual_amount(category)
             percent = self.calc_percent(actual_amount, budget_amount)
@@ -19,6 +20,7 @@ class BudgetData:
             self.data.append({
                 'id':id,
                 'category':category,
+                'type': category_type,
                 'budget_amount': budget_amount,
                 'actual_amount': actual_amount,
                 'percent': percent
