@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
 from .serializers import (CategorySerializer, LedgerItemSerializer, 
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
@@ -19,6 +20,24 @@ class LedgerItemView(viewsets.ModelViewSet):
 class BudgetItemView(viewsets.ModelViewSet):
     serializer_class = BudgetItemSerializer
     queryset = BudgetItem.objects.all()
+
+    def create(self, request):
+        print(request.data)
+        category = request.data.get('category')
+        category_type = request.data.get('type')
+        amount = request.data.get('amount')
+        owner = request.data.get('owner')
+        
+        user = User.objects.get(id=owner)
+    
+        new_category = Category(owner=user, name=category, type=category_type)
+        new_category.save()
+
+        budget_item = BudgetItem(owner=user, category=new_category,
+            amount=amount)
+        budget_item.save()
+
+        return Response(status=200)
 
 @api_view(('GET',))
 def ledger_view(self):
