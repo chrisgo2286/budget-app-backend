@@ -30,4 +30,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/ledger/', ledger_view),
     path('api/budget/', budget_view),
+    path('api/', include('dj_rest_auth.urls')),
+    path('api/registration/', include('dj_rest_auth.registration.urls'))
 ]
