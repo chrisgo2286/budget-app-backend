@@ -1,10 +1,12 @@
-from budget.models import BudgetItem, LedgerItem
+from budget.misc.filters import Filters
 
 class BudgetData:
     """Compiles required data for Budget Page"""
-    def __init__(self, budget_items, ledger_items):
+    def __init__(self, budget_items, ledger_items, month=None, year=None):
+        self.month = month
+        self.year = year
         self.budget_items = budget_items
-        self.ledger_items = ledger_items
+        self.ledger_items = self.filter_ledger_items(ledger_items)
         self.data = []
 
     def compile(self):
@@ -38,3 +40,10 @@ class BudgetData:
         """Returns percent of actual over budget amount"""
         decimal = round(actual / total, 2)
         return f'{decimal * 100}%'
+    
+    # Filter LedgerItems
+    def filter_ledger_items(self, ledger_items):
+        """Filters ledger items by month and year"""
+        self.filters = Filters(ledger_items, self.month, self.year)
+        self.filters.filter_queryset()
+        return self.filters.queryset

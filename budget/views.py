@@ -56,9 +56,12 @@ def ledger_view(request):
 
 @api_view(('GET',))
 def budget_view(request):
+    print(request.GET)
+    month = request.query_params['month']
+    year = request.query_params['year']
     user = User.objects.get(id=request.user.id)
     budget_items = BudgetItem.objects.filter(owner=user)
     ledger_items = LedgerItem.objects.filter(owner=user)
-    budget = BudgetData(budget_items, ledger_items)
+    budget = BudgetData(budget_items, ledger_items, month, year)
     budget.compile()
     return(Response(budget.data))
