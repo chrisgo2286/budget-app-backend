@@ -15,8 +15,9 @@ class Filters:
     def filter_queryset(self):
         """Filters queryset based on provided parameters"""
         for key, value in self.params.items():
-            print(f'{key}: {value}')
             if value:
+                if type(value) is list:
+                    value = value[0]
                 self.filters[key](value)
 
     def filter_month(self, month):
