@@ -44,6 +44,7 @@ class BudgetData:
     # Filter LedgerItems
     def filter_ledger_items(self, ledger_items):
         """Filters ledger items by month and year"""
-        self.filters = Filters(ledger_items, self.month, self.year)
+        params = { 'month': self.month, 'year': self.year }
+        self.filters = Filters(ledger_items, **params)
         self.filters.filter_queryset()
         return self.filters.queryset

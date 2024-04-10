@@ -7,6 +7,7 @@ from .serializers import (CategorySerializer, LedgerItemSerializer,
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
 from .misc.budget_data import BudgetData
+from .misc.filters import Filters
 
 # Create your views here.
 
@@ -36,7 +37,6 @@ class BudgetItemView(viewsets.ModelViewSet):
         category_type = request.data.get('type')
         amount = request.data.get('amount')
         user = User.objects.get(id=request.user.id)
-    
         new_category = Category(owner=user, name=category, type=category_type)
         new_category.save()
 
@@ -48,15 +48,21 @@ class BudgetItemView(viewsets.ModelViewSet):
 
 @api_view(('GET',))
 def ledger_view(request):
+    # start_date = request.query_params['startDate']
+    # end_date = request.query_params['endDate']
+    # category = request.query_params['category']
+    # itemType = request.query_params['type']
+
     user = User.objects.get(id=request.user.id)
     queryset = LedgerItem.objects.filter(owner=user)
-    queryset = queryset.values('id', 'date', 'category__name', 
+    filters = Filters(queryset, **request.query_params)
+    filters.filter_queryset()
+    queryset = filters.queryset.values('id', 'date', 'category__name', 
         'category__type', 'amount')
     return(Response(queryset))
 
 @api_view(('GET',))
 def budget_view(request):
-    print(request.GET)
     month = request.query_params['month']
     year = request.query_params['year']
     user = User.objects.get(id=request.user.id)
