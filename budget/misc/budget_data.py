@@ -12,21 +12,24 @@ class BudgetData:
     def compile(self):
         """Populates data list"""
         for budget_item in self.budget_items:
-            id = budget_item.id
-            category = budget_item.category.name
-            category_type = budget_item.category.type
-            budget_amount = budget_item.amount
-            actual_amount = self.calc_actual_amount(category)
-            percent = self.calc_percent(actual_amount, budget_amount)
+            try:
+                id = budget_item.id
+                category = budget_item.category.name
+                category_type = budget_item.category.type
+                budget_amount = budget_item.amount
+                actual_amount = self.calc_actual_amount(category)
+                percent = self.calc_percent(actual_amount, budget_amount)
             
-            self.data.append({
-                'id':id,
-                'category':category,
-                'type': category_type,
-                'budget_amount': budget_amount,
-                'actual_amount': actual_amount,
-                'percent': percent
-            })
+                self.data.append({
+                    'id':id,
+                    'category':category,
+                    'type': category_type,
+                    'budget_amount': budget_amount,
+                    'actual_amount': actual_amount,
+                    'percent': percent
+                })
+            except:
+                pass
 
     def calc_actual_amount(self, category):
         """Returns the actual amount for given category"""

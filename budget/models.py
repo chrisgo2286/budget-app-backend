@@ -37,5 +37,5 @@ class BudgetItem(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
 
-    def __str__(self):
-        return f'{self.category} - {self.amount} per Month'
+    # def __str__(self):
+    #     return f'{self.category} - {self.amount} per Month'
