@@ -32,19 +32,22 @@ class BudgetItemView(viewsets.ModelViewSet):
     serializer_class = BudgetItemSerializer
     queryset = BudgetItem.objects.all()
 
-    def create(self, request):
-        category = request.data.get('category')
-        category_type = request.data.get('type')
-        amount = request.data.get('amount')
-        user = User.objects.get(id=request.user.id)
-        new_category = Category(owner=user, name=category, type=category_type)
-        new_category.save()
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
+        
+    # def create(self, request):
+    #     category = request.data.get('category')
+    #     category_type = request.data.get('type')
+    #     amount = request.data.get('amount')
+    #     user = User.objects.get(id=request.user.id)
+    #     new_category = Category(owner=user, name=category, type=category_type)
+    #     new_category.save()
 
-        budget_item = BudgetItem(owner=user, category=new_category,
-            amount=amount)
-        budget_item.save()
+    #     budget_item = BudgetItem(owner=user, category=new_category,
+    #         amount=amount)
+    #     budget_item.save()
 
-        return Response(status=200)
+    #     return Response(status=200)
 
 @api_view(('GET',))
 def ledger_view(request):
