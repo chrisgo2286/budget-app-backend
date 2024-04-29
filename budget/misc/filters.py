@@ -20,6 +20,7 @@ class Filters:
             if value:
                 self.filters[key](value)
 
+#BUDGET ITEMS
     def filter_month(self, month):
         """Filters queryset for the given month"""
         self.queryset = self.queryset.filter(date__month=month)
@@ -28,6 +29,7 @@ class Filters:
         """Filters queryset for the given year"""
         self.queryset = self.queryset.filter(date__year=year)
 
+#LEDGER ITEMS
     def filter_start_date(self, start_date):
         """Filters queryset for the given start date"""
         self.queryset = self.queryset.filter(date__gte=start_date)
