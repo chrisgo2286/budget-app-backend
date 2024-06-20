@@ -7,6 +7,7 @@ from .serializers import (CategorySerializer, LedgerItemSerializer,
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
 from .misc.budget_data import BudgetData
+from .misc.reports import Reports
 from .misc.filters import Filters
 
 # Create your views here.
@@ -69,3 +70,12 @@ def budget_view(request):
     budget = BudgetData(budget_items, ledger_items, month, year)
     budget.compile()
     return(Response(budget.data))
+
+@api_view(('GET',))
+def reports_view(request):
+    user = User.objects.get(id=request.user.id)
+    budget_items = BudgetItem.objects.filter(owner=user)
+    ledger_items = LedgerItem.objects.filter(owner=user)
+    reports = Reports(budget_items, ledger_items)
+    reports.compile()
+    return(Response(reports.data))

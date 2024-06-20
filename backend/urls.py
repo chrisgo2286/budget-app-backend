@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from budget.views import (CategoryView, BudgetItemView, LedgerItemView, 
-    ledger_view, budget_view)
+    ledger_view, budget_view, reports_view)
 
 router = routers.DefaultRouter()
 router.register(r'categories', CategoryView, 'category')
@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/ledger/', ledger_view),
     path('api/budget/', budget_view),
+    path('api/reports/', reports_view),
     path('api/', include('dj_rest_auth.urls')),
     path('api/registration/', include('dj_rest_auth.registration.urls'))
 ]
