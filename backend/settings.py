@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['budgetapp-1jmx.onrender.com']
+ALLOWED_HOSTS = ['budgetapp-1jmx.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -92,19 +92,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://budgetappdb_rb44_user:0BSgtbzTLqz6nCm6erS8O1k43SeeIUcj@dpg-cptj64lds78s73e08vbg-a.oregon-postgres.render.com/budgetappdb_rb44',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://budgetappdb_rb44_user:0BSgtbzTLqz6nCm6erS8O1k43SeeIUcj@dpg-cptj64lds78s73e08vbg-a.oregon-postgres.render.com/budgetappdb_rb44',
+#         conn_max_age=600
+#     )
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -157,7 +157,7 @@ CORS_ORIGIN_WHITELIST = [
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
-    'http://127.0.0.1:8000',
+    'http://127.0.0.1',
     'https://budgetapp-1jmx.onrender.com'
 ]
 

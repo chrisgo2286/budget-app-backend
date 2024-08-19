@@ -7,8 +7,9 @@ from .serializers import (CategorySerializer, LedgerItemSerializer,
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
 from .misc.budget_data import BudgetData
-from .misc.reports import Reports
 from .misc.filters import Filters
+from .misc.reports.monthly_stats import MonthlyStats
+from .misc.reports.yearly_stats import YearlyStats
 
 # Create your views here.
 
@@ -35,20 +36,6 @@ class BudgetItemView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         return serializer.save(owner=self.request.user)
-        
-    # def create(self, request):
-    #     category = request.data.get('category')
-    #     category_type = request.data.get('type')
-    #     amount = request.data.get('amount')
-    #     user = User.objects.get(id=request.user.id)
-    #     new_category = Category(owner=user, name=category, type=category_type)
-    #     new_category.save()
-
-    #     budget_item = BudgetItem(owner=user, category=new_category,
-    #         amount=amount)
-    #     budget_item.save()
-
-    #     return Response(status=200)
 
 @api_view(('GET',))
 def ledger_view(request):
@@ -71,11 +58,30 @@ def budget_view(request):
     budget.compile()
     return(Response(budget.data))
 
+# @api_view(('GET',))
+# def reports_view(request):
+#     user = User.objects.get(id=request.user.id)
+#     budget_items = BudgetItem.objects.filter(owner=user)
+#     ledger_items = LedgerItem.objects.filter(owner=user)
+#     reports = Reports(budget_items, ledger_items)
+#     reports.compile()
+#     return(Response(reports.data))
+
 @api_view(('GET',))
-def reports_view(request):
+def monthly_stats_view(request):
+    month = request.query_params['month']
+    year = request.query_params['year']
     user = User.objects.get(id=request.user.id)
-    budget_items = BudgetItem.objects.filter(owner=user)
     ledger_items = LedgerItem.objects.filter(owner=user)
-    reports = Reports(budget_items, ledger_items)
-    reports.compile()
-    return(Response(reports.data))
+    monthly_stats = MonthlyStats(month, year, ledger_items)
+    monthly_stats.compile()
+    return(Response(monthly_stats.data))
+
+@api_view(('GET',))
+def yearly_stats_view(request):
+    year = request.query_params['year']
+    user = User.objects.get(id=request.user.id)
+    ledger_items = LedgerItem.objects.filter(owner=user)
+    yearly_stats = YearlyStats(year, ledger_items)
+    yearly_stats.compile()
+    return(Response(yearly_stats.data))
