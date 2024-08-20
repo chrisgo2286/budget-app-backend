@@ -10,6 +10,9 @@ from .misc.budget_data import BudgetData
 from .misc.filters import Filters
 from .misc.reports.monthly_stats import MonthlyStats
 from .misc.reports.yearly_stats import YearlyStats
+from .misc.reports.current_expense_chart import CurrentExpenseChart
+from .misc.reports.monthly_expense_chart import MonthlyExpenseChart
+from .misc.reports.monthly_savings_chart import MonthlySavingsChart
 
 # Create your views here.
 
@@ -58,15 +61,6 @@ def budget_view(request):
     budget.compile()
     return(Response(budget.data))
 
-# @api_view(('GET',))
-# def reports_view(request):
-#     user = User.objects.get(id=request.user.id)
-#     budget_items = BudgetItem.objects.filter(owner=user)
-#     ledger_items = LedgerItem.objects.filter(owner=user)
-#     reports = Reports(budget_items, ledger_items)
-#     reports.compile()
-#     return(Response(reports.data))
-
 @api_view(('GET',))
 def monthly_stats_view(request):
     month = request.query_params['month']
@@ -85,3 +79,34 @@ def yearly_stats_view(request):
     yearly_stats = YearlyStats(year, ledger_items)
     yearly_stats.compile()
     return(Response(yearly_stats.data))
+
+@api_view(('GET',))
+def current_expense_chart_view(request):
+    month = request.query_params['month']
+    year = request.query_params['year']
+    user = User.objects.get(id=request.user.id)
+    ledger_items = LedgerItem.objects.filter(owner=user)
+    categories = Category.objects.filter(owner=user)
+    current_expense_chart = CurrentExpenseChart(month, year, ledger_items, categories)
+    current_expense_chart.compile()
+    return(Response(current_expense_chart.data))
+
+@api_view(('GET',))
+def monthly_expense_chart_view(request):
+    month = request.query_params['month']
+    year = request.query_params['year']
+    user = User.objects.get(id=request.user.id)
+    ledger_items = LedgerItem.objects.filter(owner=user)
+    monthly_expense_chart = MonthlyExpenseChart(month, year, ledger_items)
+    monthly_expense_chart.compile()
+    return(Response(monthly_expense_chart.data))
+
+@api_view(('GET',))
+def monthly_savings_chart_view(request):
+    month = request.query_params['month']
+    year = request.query_params['year']
+    user = User.objects.get(id=request.user.id)
+    ledger_items = LedgerItem.objects.filter(owner=user)
+    monthly_savings_chart = MonthlySavingsChart(month, year, ledger_items)
+    monthly_savings_chart.compile()
+    return(Response(monthly_savings_chart.data))

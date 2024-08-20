@@ -5,6 +5,8 @@ from django.db.models import Sum
 class MonthlyStats:
     def __init__(self, month, year, items):
         self.items = self.filter_items(items, month, year)
+        print(f'{month} - {year}')
+        print(self.items)
         self.data = {
             "expenses": 0,
             "income": 0,
@@ -22,9 +24,9 @@ class MonthlyStats:
         """Calculates total expenses for given period"""
         for item in self.items:
             if item.category.type == "Expense":
-                self.data["expenses"] += item.amount
+                self.data["expenses"] += float(item.amount)
             else:
-                self.data["income"] += item.amount
+                self.data["income"] += float(item.amount)
 
     def calc_savings(self):
         """Calculates savings for given period"""

@@ -17,19 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from budget.views import (CategoryView, BudgetItemView, LedgerItemView, 
-    ledger_view, budget_view)
+from budget import views
 
 router = routers.DefaultRouter()
-router.register(r'categories', CategoryView, 'category')
-router.register(r'ledger_items', LedgerItemView, 'ledger_item')
-router.register(r'budget_items', BudgetItemView, 'budget_item')
+router.register(r'categories', views.CategoryView, 'category')
+router.register(r'ledger_items', views.LedgerItemView, 'ledger_item')
+router.register(r'budget_items', views.BudgetItemView, 'budget_item')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/ledger/', ledger_view),
-    path('api/budget/', budget_view),
+    path('api/ledger/', views.ledger_view),
+    path('api/budget/', views.budget_view),
+    path('api/reports/monthly_stats/', views.monthly_stats_view),
+    path('api/reports/yearly_stats/', views.yearly_stats_view),
+    path('api/reports/current_expense_chart/', views.current_expense_chart_view),
+    path('api/reports/monthly_expense_chart/', views.monthly_expense_chart_view),
+    path('api/reports/monthly_savings_chart/', views.monthly_savings_chart_view),
     path('api/', include('dj_rest_auth.urls')),
     path('api/registration/', include('dj_rest_auth.registration.urls'))
 ]
