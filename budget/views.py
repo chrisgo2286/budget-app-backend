@@ -67,7 +67,8 @@ def monthly_stats_view(request):
     year = request.query_params['year']
     user = User.objects.get(id=request.user.id)
     ledger_items = LedgerItem.objects.filter(owner=user)
-    monthly_stats = MonthlyStats(month, year, ledger_items)
+    budget_items = BudgetItem.objects.filter(owner=user)
+    monthly_stats = MonthlyStats(month, year, ledger_items, budget_items)
     monthly_stats.compile()
     return(Response(monthly_stats.data))
 

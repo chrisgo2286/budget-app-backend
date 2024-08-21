@@ -20,8 +20,10 @@ class CurrentExpenseChart:
     def compile_expense_totals(self):
         """Compiles totals for each category"""
         for category in self.expense_categories:
-            items = self.filter_items_by_category(category, items)
-            amount = self.calc_category_total(items)
+            amount = 0
+            items = self.filter_items_by_category(category, self.items)
+            if items:
+                amount = self.calc_category_total(items)
             self.data.append({"name": category.name, "amount": amount})
 
     def filter_items_by_period(self, month, year, items):

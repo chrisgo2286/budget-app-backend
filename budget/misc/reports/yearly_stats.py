@@ -23,9 +23,9 @@ class YearlyStats:
         """Calculates total expenses for given period"""
         for run in self.items:
             if run.category.type == "Expense":
-                self.data["expenses"] += run.amount
+                self.data["expenses"] += float(run.amount)
             else:
-                self.data["income"] += run.amount
+                self.data["income"] += float(run.amount)
 
     def calc_savings(self):
         """Calculates savings for given period"""
@@ -34,7 +34,8 @@ class YearlyStats:
     def calc_percent_of_budget(self):
         """Calculates expenses as percent of budget"""
         total_budget = self.calc_budget_total()
-        return self.data["expenses"] / total_budget * 100
+        percent = round(self.data["expenses"] / total_budget * 100, 2)
+        self.data["budgetPercent"] = percent
     
     def calc_budget_total(self):
         """Returns total for budget items"""
@@ -46,10 +47,10 @@ class YearlyStats:
     def calc_total_months(self):
         """Returns total months as a float"""
         current_date = date.today()
-        full_months = current_date.month
+        full_months = int(current_date.month)
         fraction_of_month = (current_date.day / monthrange(current_date.year, 
-            current_date.month))
-        return float(f'{full_months}.{fraction_of_month}')
+            current_date.month)[1])
+        return full_months + fraction_of_month
 
     def filter_items(self, items, year):
         """Returns queryset of current items based on month and year"""
