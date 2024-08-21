@@ -33,7 +33,8 @@ class MonthlyStats:
     def calc_percent_of_budget(self):
         """Calculates expenses as percent of budget"""
         total_budget = self.calc_budget_total()
-        self.data["budgetPercent"] = self.data["expenses"] / total_budget * 100
+        percent = round(self.data["expenses"] / total_budget * 100, 2)
+        self.data["budgetPercent"] = percent
     
     def calc_budget_total(self):
         """Returns total for budget items"""
