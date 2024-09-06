@@ -5,7 +5,7 @@ class BudgetData:
     def __init__(self, budget_items, ledger_items, month=None, year=None):
         self.month = month
         self.year = year
-        self.budget_items = budget_items
+        self.budget_items = self.filter_budget_items(budget_items)
         self.ledger_items = self.filter_ledger_items(ledger_items)
         self.data = []
 
@@ -44,10 +44,11 @@ class BudgetData:
         decimal = round(actual / total, 2)
         return f'{decimal * 100}%'
     
-    # Filter LedgerItems
-    def filter_ledger_items(self, ledger_items):
+    # Filter LedgerItems and BudgetItems
+    def filter_ledger_items(self, items):
         """Filters ledger items by month and year"""
-        params = { 'month': self.month, 'year': self.year }
-        self.filters = Filters(ledger_items, **params)
-        self.filters.filter_queryset()
-        return self.filters.queryset
+        return items.filter(date__month=self.month, date__year=self.year)
+    
+    def filter_budget_items(self, items):
+        """Filters budget items by month and year"""
+        return items.filter(month=self.month, year=self.year)
