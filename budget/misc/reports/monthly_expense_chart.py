@@ -15,7 +15,7 @@ class MonthlyExpenseChart:
         current_date = date(int(self.year), int(self.month), 1)
         for _ in range(5):
             amount = self.calc_monthly_sum(current_date.month)
-            month_name = calendar.month_name[current_date.month]
+            month_name = calendar.month_name[current_date.month][:3]
             self.data.insert(0, {"name": month_name, "amount": amount})
             current_date = current_date - relativedelta(months=1)
 
