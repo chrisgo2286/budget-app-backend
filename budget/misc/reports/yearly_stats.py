@@ -4,8 +4,9 @@ from budget.models import BudgetItem
 from django.db.models import Sum
 
 class YearlyStats:
-    def __init__(self, year, items):
-        self.items = self.filter_items(items, year)
+    def __init__(self, year, items, budget):
+        self.items = self.filter_ledger_items(items, year)
+        self.budget = self.filter_budget_items(budget, year)
         self.data = {
             "expenses": 0,
             "income": 0,
@@ -15,6 +16,8 @@ class YearlyStats:
 
     def compile(self):
         """Compiles all stats into data dict"""
+        print(f"Ledger: { self.items }")
+        print(f"Budget: { self.budget }")
         self.calc_expenses_and_income()
         self.calc_savings()
         self.calc_percent_of_budget()
@@ -34,16 +37,15 @@ class YearlyStats:
     def calc_percent_of_budget(self):
         """Calculates expenses as percent of budget"""
         total_budget = self.calc_budget_total()
+        print(f"Total Budget: {total_budget}")
         percent = round(self.data["expenses"] / total_budget * 100, 2)
         self.data["budgetPercent"] = percent
     
     def calc_budget_total(self):
         """Returns total for budget items"""
-        budget_sum = BudgetItem.objects.aggregate(Sum('amount'))
-        monthly_budget = float(budget_sum["amount__sum"])
-        total_months = self.calc_total_months()
-        return monthly_budget * total_months
-
+        budget_sum = self.budget.aggregate(Sum('amount'))
+        return float(budget_sum["amount__sum"])
+        
     def calc_total_months(self):
         """Returns total months as a float"""
         current_date = date.today()
@@ -52,7 +54,11 @@ class YearlyStats:
             current_date.month)[1])
         return full_months + fraction_of_month
 
-    def filter_items(self, items, year):
+    def filter_budget_items(self, items, year):
+        """Returns queryset of budget items for given year"""
+        return items.filter(year=year, category__type="Expense")
+    
+    def filter_ledger_items(self, items, year):
         """Returns queryset of current items based on month and year"""
         current_date = date.today()
         return items.filter(date__lte=current_date, date__year=year)

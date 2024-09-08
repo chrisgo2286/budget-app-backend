@@ -3,8 +3,8 @@ from django.db.models import Sum
 
 class MonthlyStats:
     def __init__(self, month, year, items, budget):
-        self.items = self.filter_items(items, month, year)
-        self.budget = budget
+        self.items = self.filter_ledger_items(items, month, year)
+        self.budget = self.filter_budget_items(budget, month, year)
         self.data = {
             "expenses": 0,
             "income": 0,
@@ -41,7 +41,11 @@ class MonthlyStats:
         budget_sum = self.budget.aggregate(Sum('amount'))
         return float(budget_sum["amount__sum"])
 
-    def filter_items(self, items, month, year):
+    def filter_budget_items(self, items, month, year):
+        """Returns queryset of budget items based on month and year"""
+        return items.filter(month=month, year=year, category__type="Expense")
+    
+    def filter_ledger_items(self, items, month, year):
         """Returns queryset of current runs based on month and year"""
         current_date = date.today()
         return items.filter(date__lte=current_date, date__month=month, 
