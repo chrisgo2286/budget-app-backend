@@ -7,7 +7,19 @@ class BudgetData:
         self.year = year
         self.budget_items = self.filter_budget_items(budget_items)
         self.ledger_items = self.filter_ledger_items(ledger_items)
-        self.data = []
+        self.budget_total = 0
+        self.ledger_total = 0
+        self.data = {
+            "expense": {
+                "budget": 0,
+                "ledger": 0
+            },
+            "income": {
+                "budget": 0,
+                "ledger": 0
+            },
+            "items": []
+        }
 
     def compile(self):
         """Populates data list"""
@@ -19,8 +31,8 @@ class BudgetData:
                 budget_amount = budget_item.amount
                 actual_amount = self.calc_actual_amount(category)
                 percent = self.calc_percent(actual_amount, budget_amount)
-            
-                self.data.append({
+                
+                self.data["items"].append({
                     'id':id,
                     'category':category,
                     'type': category_type,
@@ -28,6 +40,10 @@ class BudgetData:
                     'actual_amount': actual_amount,
                     'percent': percent
                 })
+
+                self.data[category_type.lower()]["budget"] += budget_amount
+                self.data[category_type.lower()]["ledger"] += actual_amount
+
             except:
                 pass
 
