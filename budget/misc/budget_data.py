@@ -10,7 +10,11 @@ class BudgetData:
         self.budget_total = 0
         self.ledger_total = 0
         self.data = {
-            "expense": {
+            "variable_expense": {
+                "budget": 0,
+                "ledger": 0
+            },
+            "fixed_expense": {
                 "budget": 0,
                 "ledger": 0
             },
