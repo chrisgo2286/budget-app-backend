@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 TYPE_CHOICES = (
     ('Expense', 'Expense'),
+    ('ExpenseFixed', 'ExpenseFixed'),
+    ('ExpenseVariable', 'ExpenseVariable'),
     ('Income', 'Income')
 )
 
