@@ -15,7 +15,7 @@ class CurrentExpenseChart:
     def compile_expense_categories(self):
         """Compiles list of all categories for given period for user"""
         return [category for category in self.categories 
-            if category.type == "Expense"]
+            if category.type != "Income"]
 
     def compile_expense_totals(self):
         """Compiles totals for each category"""

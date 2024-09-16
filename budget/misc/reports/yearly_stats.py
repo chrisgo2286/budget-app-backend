@@ -16,8 +16,6 @@ class YearlyStats:
 
     def compile(self):
         """Compiles all stats into data dict"""
-        print(f"Ledger: { self.items }")
-        print(f"Budget: { self.budget }")
         self.calc_expenses_and_income()
         self.calc_savings()
         self.calc_percent_of_budget()
@@ -25,7 +23,7 @@ class YearlyStats:
     def calc_expenses_and_income(self):
         """Calculates total expenses for given period"""
         for run in self.items:
-            if run.category.type == "Expense":
+            if run.category.type in ("Fixed_Expense", "Variable_Expense"):
                 self.data["expenses"] += float(run.amount)
             else:
                 self.data["income"] += float(run.amount)
@@ -37,26 +35,24 @@ class YearlyStats:
     def calc_percent_of_budget(self):
         """Calculates expenses as percent of budget"""
         total_budget = self.calc_budget_total()
-        print(f"Total Budget: {total_budget}")
-        percent = round(self.data["expenses"] / total_budget * 100, 2)
-        self.data["budgetPercent"] = percent
+        if total_budget > 0:
+            percent = round(self.data["expenses"] / total_budget * 100, 2)
+            self.data["budgetPercent"] = percent
     
     def calc_budget_total(self):
         """Returns total for budget items"""
         budget_sum = self.budget.aggregate(Sum('amount'))
-        return float(budget_sum["amount__sum"])
-        
-    def calc_total_months(self):
-        """Returns total months as a float"""
-        current_date = date.today()
-        full_months = int(current_date.month)
-        fraction_of_month = (current_date.day / monthrange(current_date.year, 
-            current_date.month)[1])
-        return full_months + fraction_of_month
+        if (budget_sum["amount__sum"]):
+            return float(budget_sum["amount__sum"])
+        return 0.0
 
     def filter_budget_items(self, items, year):
         """Returns queryset of budget items for given year"""
-        return items.filter(year=year, category__type="Expense")
+        items = items.filter(year=year)
+        return (
+            items.filter(category__type="Fixed_Expense") |
+            items.filter(category__type="Variable_Expense")    
+        )
     
     def filter_ledger_items(self, items, year):
         """Returns queryset of current items based on month and year"""

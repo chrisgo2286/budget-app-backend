@@ -70,7 +70,6 @@ def monthly_stats_view(request):
     budget_items = BudgetItem.objects.filter(owner=user)
     monthly_stats = MonthlyStats(month, year, ledger_items, budget_items)
     monthly_stats.compile()
-    print(monthly_stats.data)
     return(Response(monthly_stats.data))
 
 @api_view(('GET',))

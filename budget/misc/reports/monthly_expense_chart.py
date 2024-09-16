@@ -21,8 +21,11 @@ class MonthlyExpenseChart:
 
     def filter_expense_items(self, items):
         """Filters current items for only expense type"""
-        current_date = date.today()
-        return items.filter(date__lte=current_date, category__type="Expense")
+        items = items.filter(date__lte=date.today())
+        return (
+            items.filter(category__type="Fixed_Expense") |
+            items.filter(category__type="Variable_Expense")
+        )
     
     def calc_monthly_sum(self, month_num):
         """Returns amount total"""

@@ -18,9 +18,15 @@ class BudgetData:
                 "budget": 0,
                 "ledger": 0
             },
+            "expense": {
+                "budget": 0,
+                "ledger": 0,
+                "percent": 0,
+            },
             "income": {
                 "budget": 0,
-                "ledger": 0
+                "ledger": 0,
+                "percent": 0
             },
             "items": []
         }
@@ -51,6 +57,13 @@ class BudgetData:
             except:
                 pass
 
+        expense_budget = self.data["fixed_expense"]["budget"] + self.data["variable_expense"]["budget"]
+        expense_ledger = self.data["fixed_expense"]["ledger"] + self.data["variable_expense"]["ledger"]
+        self.data["expense"]["budget"] = expense_budget
+        self.data["expense"]["ledger"] = expense_ledger
+        self.data["expense"]["percent"] = self.calc_percent(expense_ledger, expense_budget)
+        self.data["income"]["percent"] = self.calc_percent(self.data["income"]["ledger"], self.data["income"]["budget"])
+
     def calc_actual_amount(self, category):
         """Returns the actual amount for given category"""
         total = 0
@@ -61,8 +74,10 @@ class BudgetData:
 
     def calc_percent(self, actual, total):
         """Returns percent of actual over budget amount"""
-        decimal = round(actual / total, 2)
-        return f'{decimal * 100}%'
+        if total:
+            decimal = round(actual / total, 2)
+            return f'{decimal * 100}%'
+        return 0.0
     
     # Filter LedgerItems and BudgetItems
     def filter_ledger_items(self, items):

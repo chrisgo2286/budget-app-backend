@@ -37,6 +37,9 @@ class MonthlySavingsChart:
         """Returns queryset of expenses and queryset of income items"""
         current_date = date.today()
         current_items = items.filter(date__lte=current_date)
-        expense_items = current_items.filter(category__type="Expense")
+        expense_items = (
+            current_items.filter(category__type="Fixed_Expense") |
+            current_items.filter(category__type="Variable_Expense")
+        )
         income_items = current_items.filter(category__type="Income")
         return expense_items, income_items
