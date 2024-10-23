@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/ledger/', views.ledger_view),
     path('api/budget/', views.budget_view),
+    path('api/budget_copy/', views.budget_copy_view),
     path('api/reports/monthly_stats/', views.monthly_stats_view),
     path('api/reports/yearly_stats/', views.yearly_stats_view),
     path('api/reports/current_expense_chart/', views.current_expense_chart_view),

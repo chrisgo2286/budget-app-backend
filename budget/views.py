@@ -2,7 +2,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
 from .serializers import (CategorySerializer, LedgerItemSerializer, 
     BudgetItemSerializer)
 from .models import Category, LedgerItem, BudgetItem
@@ -13,6 +12,7 @@ from .misc.reports.yearly_stats import YearlyStats
 from .misc.reports.current_expense_chart import CurrentExpenseChart
 from .misc.reports.monthly_expense_chart import MonthlyExpenseChart
 from .misc.reports.monthly_savings_chart import MonthlySavingsChart
+from .misc.budget_copy import BudgetCopy
 
 # Create your views here.
 
@@ -112,3 +112,13 @@ def monthly_savings_chart_view(request):
     monthly_savings_chart = MonthlySavingsChart(month, year, ledger_items)
     monthly_savings_chart.compile()
     return(Response(monthly_savings_chart.data))
+
+@api_view(('GET',))
+def budget_copy_view(request):
+    month = request.query_params['month']
+    year = request.query_params['year']
+    user = User.objects.get(id=request.user.id)
+    budget_items = BudgetItem.objects.filter(owner=user)
+    budget_copy = BudgetCopy(budget_items, month, year)
+    budget_copy.copy()
+    return(Response())
