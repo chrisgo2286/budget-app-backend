@@ -46,9 +46,11 @@ def ledger_view(request):
     queryset = LedgerItem.objects.filter(owner=user)
     filters = Filters(queryset, **request.query_params)
     filters.filter_queryset()
-    queryset = filters.queryset.values('id', 'date', 'category__name', 
+    queryset = filters.queryset.order_by("date")
+    values = queryset.values('id', 'date', 'category__name', 
         'category__type', 'amount')
-    return(Response(queryset))
+    
+    return(Response(values))
 
 @api_view(('GET',))
 def budget_view(request):

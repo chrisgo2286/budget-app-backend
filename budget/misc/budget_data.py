@@ -1,5 +1,3 @@
-from budget.misc.filters import Filters
-
 class BudgetData:
     """Compiles required data for Budget Page"""
     def __init__(self, budget_items, ledger_items, month=None, year=None):
@@ -76,7 +74,7 @@ class BudgetData:
         """Returns percent of actual over budget amount"""
         if total:
             decimal = round(actual / total, 2)
-            return f'{decimal * 100}%'
+            return f'{min(round(decimal * 100,0), 100)}%'
         return 0.0
     
     # Filter LedgerItems and BudgetItems

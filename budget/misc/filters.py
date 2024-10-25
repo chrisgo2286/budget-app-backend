@@ -14,13 +14,15 @@ class Filters:
 
     def filter_queryset(self):
         """Filters queryset based on provided parameters"""
+        if self.params["startDate"] == "" or self.params["endDate"] == "":
+            self.params["month"] = ""
+            self.params["year"] = ""
         for key, value in self.params.items():
             if type(value) is list:
                 value = value[0]    
             if value:
                 self.filters[key](value)
 
-#BUDGET ITEMS
     def filter_month(self, month):
         """Filters queryset for the given month"""
         self.queryset = self.queryset.filter(date__month=month)
@@ -29,7 +31,6 @@ class Filters:
         """Filters queryset for the given year"""
         self.queryset = self.queryset.filter(date__year=year)
 
-#LEDGER ITEMS
     def filter_start_date(self, start_date):
         """Filters queryset for the given start date"""
         self.queryset = self.queryset.filter(date__gte=start_date)
