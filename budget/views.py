@@ -42,6 +42,7 @@ class BudgetItemView(viewsets.ModelViewSet):
 
 @api_view(('GET',))
 def ledger_view(request):
+    print(request.query_params)
     user = User.objects.get(id=request.user.id)
     queryset = LedgerItem.objects.filter(owner=user)
     filters = Filters(queryset, **request.query_params)

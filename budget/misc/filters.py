@@ -14,7 +14,7 @@ class Filters:
 
     def filter_queryset(self):
         """Filters queryset based on provided parameters"""
-        if self.params["startDate"] == "" or self.params["endDate"] == "":
+        if self.params["startDate"] != [""] or self.params["endDate"] != [""]:
             self.params["month"] = ""
             self.params["year"] = ""
         for key, value in self.params.items():
